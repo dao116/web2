@@ -3,9 +3,9 @@ web2/
 ├── style.css
 ├── script.js
 └── vercel.json
-name: Deploy to Vercel
+name
 
-on:
+on
   push:
     branches:
       - main
@@ -13,7 +13,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
+    steps
       - name: Clone repo
         uses: actions/checkout@v3
 
