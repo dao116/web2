@@ -1,0 +1,5 @@
+web2/
+├── index.html       # 必须
+├── style.css        # 可选
+├── script.js        # 可选
+└── vercel.json      # 推荐
