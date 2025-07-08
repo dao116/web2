@@ -6,15 +6,14 @@ web2/
 
 
 
-on:
-  push:
-    branches:
+  push
+    branches
       - main
 
-jobs:
-  deploy:
+jobs
+  deploy
     runs-on: ubuntu-latest
-    steps:
+    steps
       - name: Clone repo
         uses: actions/checkout@v3
 
