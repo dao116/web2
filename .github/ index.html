@@ -1,56 +1,47 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
-    <title>支付宝跳转演示</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        function redirectToAlipay(token) {
-            const scheme = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(`https://web2.vercel.app/?token=${token}`)}`;
-            window.location.href = scheme;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>跳转支付宝转账</title>
+  <script>
+    function getRandomAmount() {
+      // 随机金额：5.00 ~ 200.00 元
+      return (Math.random() * (200 - 5) + 5).toFixed(2);
+    }
 
-            setTimeout(() => {
-                if (!document.hidden) {
-                    document.getElementById('qr-container').style.display = 'block';
-                    generateQRCode(token);
-                }
-            }, 1500);
-        }
+    function getRandomRemark() {
+      // 随机生成订单号作为备注
+      const now = Date.now();
+      const random = Math.floor(Math.random() * 10000);
+      return `订单#${now}${random}`;
+    }
 
-        function generateQRCode(token) {
-            const qrData = `https://web2.vercel.app/?token=${token}`;
-            document.getElementById('qr-code').innerHTML =
-                `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}" 
-                      alt="支付宝支付二维码">`;
-        }
+    function redirectToAlipay() {
+      const amount = getRandomAmount();
+      const memo = getRandomRemark();
+      const userId = '2088812039008649';
 
-        window.onload = function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token') || 'demo_token_123456';
-            redirectToAlipay(token);
-        };
-    </script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; }
-        #qr-container { display: none; margin-top: 30px; }
-        button { padding: 12px 24px; background: #1677ff; color: white;
-            border: none; border-radius: 4px; cursor: pointer; }
-        .warning { color: #f5222d; background: #fff1f0; padding: 15px;
-            border: 1px solid #ffa39e; margin: 20px 0; }
-    </style>
+      const scheme = `alipays://platformapi/startapp?appId=20000123&actionType=toAccount&goBack=YES&userId=${userId}&amount=${amount}&memo=${encodeURIComponent(memo)}`;
+
+      // 跳转到支付宝
+      window.location.href = scheme;
+    }
+
+    window.onload = redirectToAlipay;
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <h2>支付宝支付跳转演示</h2>
-    <div class="warning"></div>
-    <p>正在尝试跳转到支付宝APP...</p>
-    <div id="qr-container">
-        <p>跳转失败，请扫码支付：</p>
-        <div id="qr-code"></div>
-        <p>或 <button onclick="redirectToAlipay()">重试跳转</button></p>
-    </div>
-</div>
+  <h2>正在跳转到支付宝转账页面...</h2>
+  <p>请稍等，正在处理支付请求</p>
 </body>
 </html>
 
