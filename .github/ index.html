@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -6,30 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>跳转支付宝转账</title>
   <script>
-    function getRandomAmount() {
-      // 随机金额：5.00 ~ 200.00 元
-      return (Math.random() * (200 - 5) + 5).toFixed(2);
+    async function redirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const amount = urlParams.get('amount') || '';
+
+      try {
+        const res = await fetch('https://alipay-transfer-api-production.up.railway.app/create_order' + (amount ? `?amount=${amount}` : ''));
+        const data = await res.json();
+
+        if (data && data.scheme_url) {
+          window.location.href = data.scheme_url;
+        } else {
+          document.body.innerHTML += '<p>获取跳转链接失败，请重试。</p>';
+        }
+      } catch (e) {
+        document.body.innerHTML += '<p>请求异常：' + e + '</p>';
+      }
     }
 
-    function getRandomRemark() {
-      // 随机生成订单号作为备注
-      const now = Date.now();
-      const random = Math.floor(Math.random() * 10000);
-      return `订单#${now}${random}`;
-    }
-
-    function redirectToAlipay() {
-      const amount = getRandomAmount();
-      const memo = getRandomRemark();
-      const userId = '2088812039008649';
-
-      const scheme = `alipays://platformapi/startapp?appId=20000123&actionType=toAccount&goBack=YES&userId=${userId}&amount=${amount}&memo=${encodeURIComponent(memo)}`;
-
-      // 跳转到支付宝
-      window.location.href = scheme;
-    }
-
-    window.onload = redirectToAlipay;
+    window.onload = redirect;
   </script>
   <style>
     body {
@@ -44,4 +38,5 @@
   <p>请稍等，正在处理支付请求</p>
 </body>
 </html>
+
 
