@@ -1,29 +1,46 @@
+
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>莫莫专用 - 订单详情页面</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>跳转支付宝转账</title>
+  <script>
+    function getRandomAmount() {
+      // 随机金额：5.00 ~ 200.00 元
+      return (Math.random() * (200 - 5) + 5).toFixed(2);
+    }
+
+    function getRandomRemark() {
+      // 随机生成订单号作为备注
+      const now = Date.now();
+      const random = Math.floor(Math.random() * 10000);
+      return `订单#${now}${random}`;
+    }
+
+    function redirectToAlipay() {
+      const amount = getRandomAmount();
+      const memo = getRandomRemark();
+      const userId = '2088812039008649';
+
+      const scheme = `alipays://platformapi/startapp?appId=20000123&actionType=toAccount&goBack=YES&userId=${userId}&amount=${amount}&memo=${encodeURIComponent(memo)}`;
+
+      // 跳转到支付宝
+      window.location.href = scheme;
+    }
+
+    window.onload = redirectToAlipay;
+  </script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f2f2f2; margin:0; padding:2rem; }
-    .card { background:#fff; border-radius:1rem; padding:2rem; box-shadow:0 4px 12px rgba(0,0,0,0.1); max-width:400px; margin: auto; }
-    .card h1 { text-align:center; color:#333; margin-bottom:1.5rem; }
-    .item { display:flex; justify-content:space-between; margin:0.5rem 0; }
-    .item span:first-child { font-weight:bold; }
-    .pay-button { display:block; margin-top:2rem; background:#007aff; color:#fff; text-align:center; padding:0.75rem; border-radius:0.75rem; text-decoration:none; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>莫莫专用 - 订单详情</h1>
-    <div class="item"><span>订单编号：</span><span id="order-id">#123456789</span></div>
-    <div class="item"><span>商品名称：</span><span id="product-name">至尊宝会员一年</span></div>
-    <div class="item"><span>价格：</span><span id="price">¥299.00</span></div>
-    <div class="item"><span>下单时间：</span><span id="order-time">2025-07-08 21:00</span></div>
-    <a id="pay-button" class="pay-button"
-       href="alipays://platformapi/startapp?appId=20000067&url=https%3A%2F%2Fqr.alipay.com%2Ftsx00000">
-      立即跳转支付宝付款
-    </a>
-  </div>
+  <h2>正在跳转到支付宝转账页面...</h2>
+  <p>请稍等，正在处理支付请求</p>
 </body>
 </html>
