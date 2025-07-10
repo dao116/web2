@@ -1,45 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>莫莫专用订单详情页面</title>
-  <style>
-    body {
-      font-family: "Helvetica Neue", sans-serif;
-      text-align: center;
-      padding: 50px;
-      background-color: #f2f2f2;
-    }
-    h1 { color: #333; }
-    .qrcode { margin-top: 30px; }
-    .qrcode img {
-      width: 280px;
-      border: 8px solid #fff;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    }
-    .btn {
-      margin-top: 20px;
-      background-color: #00A0E9;
-      color: #fff;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background-color: #0077b6;
-    }
-  </style>
+    <title>支付宝跳转演示</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function redirectToAlipay(token) {
+            const scheme = `alipays://platformapi/startapp?appId=20000067&url=${encodeURIComponent(`https://web2.vercel.app/?token=${token}`)}`;
+            window.location.href = scheme;
+
+            setTimeout(() => {
+                if (!document.hidden) {
+                    document.getElementById('qr-container').style.display = 'block';
+                    generateQRCode(token);
+                }
+            }, 1500);
+        }
+
+        function generateQRCode(token) {
+            const qrData = `https://web2.vercel.app/?token=${token}`;
+            document.getElementById('qr-code').innerHTML =
+                `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}" 
+                      alt="支付宝支付二维码">`;
+        }
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token') || 'demo_token_123456';
+            redirectToAlipay(token);
+        };
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; }
+        #qr-container { display: none; margin-top: 30px; }
+        button { padding: 12px 24px; background: #1677ff; color: white;
+            border: none; border-radius: 4px; cursor: pointer; }
+        .warning { color: #f5222d; background: #fff1f0; padding: 15px;
+            border: 1px solid #ffa39e; margin: 20px 0; }
+    </style>
 </head>
 <body>
-  <h1>莫莫专用订单详情页面</h1>
-  <p>请使用支付宝扫码付款</p>
-  <div class="qrcode">
-    <img src="https://qr.alipay.com/fkx19356jd8omrefptgpk6f" alt="支付宝收款码">
-  </div>
-  <button class="btn" onclick="window.location.href='alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/fkx19356jd8omrefptgpk6f'">
-    点击跳转支付宝App付款
-  </button>
+<div class="container">
+    <h2>支付宝支付跳转演示</h2>
+    <div class="warning"></div>
+    <p>正在尝试跳转到支付宝APP...</p>
+    <div id="qr-container">
+        <p>跳转失败，请扫码支付：</p>
+        <div id="qr-code"></div>
+        <p>或 <button onclick="redirectToAlipay()">重试跳转</button></p>
+    </div>
+</div>
 </body>
 </html>
+
